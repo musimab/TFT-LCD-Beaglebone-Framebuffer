@@ -1,0 +1,121 @@
+/*
+ * Copyright (C) 2013 CircuitCo
+ *
+ * Virtual cape for SPI1 on connector pins P9.29 P9.31 P9.30 P9.28
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/am33xx.h>
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+	/* identification */
+	part-number = "BB-SPIDEV1";
+	version = "00A0";
+
+	/* state the resources this cape uses */
+	exclusive-use =
+		/* the pin header uses */
+		"P9.31",	/* spi1_sclk */
+		"P9.29",	/* spi1_d0 */
+		"P9.30",	/* spi1_d1 */
+		"P9.28",	/* spi1_cs0 */
+		// "P9.42",	/* spi1_cs1 */
+		/* the hardware ip uses */
+		"spi1";
+
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			/* default state has all gpios released and mode set to uart1 */
+			bb_spi1_pins: pinmux_bb_spi1_pins {
+				pinctrl-single,pins = <
+					0x190 0x33	/* mcasp0_aclkx.spi1_sclk, INPUT_PULLUP | MODE3 */
+					0x194 0x33	/* mcasp0_fsx.spi1_d0, INPUT_PULLUP | MODE3 */
+					0x198 0x13	/* mcasp0_axr0.spi1_d1, OUTPUT_PULLUP | MODE3 */
+					0x19c 0x13	/* mcasp0_ahclkr.spi1_cs0, OUTPUT_PULLUP | MODE3 */
+					// 0x164 0x12	/* eCAP0_in_PWM0_out.spi1_cs1 OUTPUT_PULLUP | MODE2 */
+				>;
+			};
+			
+			lcd_ctrl_pinmux: lcd_ctrl_pins {
+				pinctrl-single,pins = <
+				0x040 0x17  /* gpio1_16  OUTPUT_PULLUP | MODE7 */
+				0x078 0x17  /* gpio1_28  OUTPUT_PULLUP | MODE7 */
+				0x04C 0x17  /* gpio1_19  INPUT_PULLUP | MODE7 */
+				>;
+			      };
+		};
+	};
+
+	fragment@1 {
+		target = <&spi1>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&bb_spi1_pins>;
+			ti,pio-mode; /* disable dma when used as an overlay, dma gets stuck at 160 bits... */
+
+		channel@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			compatible = "rohm,dh2228fv";
+			symlink = "bone/spi/1.0";
+
+			reg = <0>;
+			spi-max-frequency = <16000000>;
+			spi-cpha;
+		};
+
+		channel@1 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			compatible = "rohm,dh2228fv";
+			symlink = "bone/spi/1.1";
+
+			reg = <1>;
+			spi-max-frequency = <16000000>;
+		};
+
+		lcd@0{
+
+			compatible = "ilitek,ili9341";
+			reg = <0>;
+			bgr;
+			fps = <30>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&lcd_ctrl_pinmux>;
+			spi-max-frequency = <32000000>;
+	
+			led-gpios = <&gpio1 28 0>;
+			regwidth = <8>;
+			buswidth = <8>;
+			verbose = <3>;
+			debug = <2>;
+			
+			rotate = <180>;
+			reset-gpios = <&gpio1 16 1>;
+			/*reset-gpios = <&gpio1 16 1>; */
+			
+			dc-gpios = <&gpio1 19 0>;
+			
+			status = "okay";
+		};
+
+
+		};
+	};
+};
