@@ -355,86 +355,9 @@ ile beaglebone üzerinde programımızı çalıştırabilmek için ekstra parame
 
 
 
-* Spi driverinin yüklü olup olmadığını test etmek için aşağıdaki komutlar ile arama yapabiriz.
-
-`find / -name spi1*`
-
-`find / -name fbtft`
-
-`ls -al /proc/device-tree/soc/`
-
-`dmesg | grep ili9341*`
-
-`uname -r`
-
-`ls -l /sys/firmware/devicetree/base/chosen/overlays `
-
-
-
-
-
 ## Kaynaklar 
 
 https://github.com/notro/fbtft/wiki/Framebuffer-use
 
-https://www.microchip.com/forums/m1215310.aspx
 
 
-https://community.element14.com/products/devtools/single-board-computers/next-genbeaglebone/b/blog/posts/build-fbtft-drivers-for-linux-4-4-on-beaglebone-black
-
-http://papermint-designs.com/dmo-blog/2017-02-beaglebone-black-and-watterott-display#
-
-
-https://github.com/notro/fbtft/wiki/BeagleBone-Black
-
-* `spi ili9341 2.4 tft`
-https://m.blog.naver.com/jjong_w/220971986593
-
-
-https://github.com/linux4sam/linux-at91/blob/linux4sam-2021.04/Documentation/devicetree/bindings/display/ilitek%2Cili9341.txt
-
-http://noisezero.blogspot.com/2013/12/watterott-mi0283qt-9a-display-on.html
-
-
-https://github.com/MarkAYoder/BeagleBoard-exercises/tree/master/displays/ili9341/tinyDRM
-
-https://m.blog.naver.com/jjong_w/220971986593
-
-
-https://github.com/notro/panel-mipi-dbi/wiki/fbtft
-
-
-```
-
-Ilitek ILI9341 display panels
-
-This binding is for display panels using an Ilitek ILI9341 controller in SPI
-mode.
-
-Required properties:
-- compatible:	"adafruit,yx240qv29", "ilitek,ili9341"
-- dc-gpios:	D/C pin
-- reset-gpios:	Reset pin
-
-The node for this driver must be a child node of a SPI controller, hence
-all mandatory properties described in ../spi/spi-bus.txt must be specified.
-
-Optional properties:
-- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
-- backlight:	phandle of the backlight device attached to the panel
-
-Example:
-	display@0{
-		compatible = "adafruit,yx240qv29", "ilitek,ili9341";
-		reg = <0>;
-		spi-max-frequency = <32000000>;
-		dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
-		rotation = <270>;
-		backlight = <&backlight>;
-	};
-
-```
-https://tldp.org/HOWTO/Framebuffer-HOWTO/x131.html
-
-/dev/fb0 is your actual framebuffer device node whilst fbdev is the framework and drivers for communicating with the framebuffer.
