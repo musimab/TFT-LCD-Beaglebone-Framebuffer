@@ -2,6 +2,8 @@
 ## FBTFT ile Beaglebone üzerinde Qt Uygulaması Geliştirilmesi ve TFT LCD Bağlantısının Kurulması
 
 
+https://medium.com/@mustafaboyuk24/fbtft-ile-beaglebone-üzerinde-qt-uygulaması-geliştirilmesi-ve-tft-lcd-bağlantısının-kurulması-3e5cf506d90c
+
 İlk olarak framebuffer cihaz  nedir bunun açıklamasını yapaılım.
 
 * Framebuffer cihazı grafik donanımı için bir soyutlamanın olduğu yerdir. Bazı video donanımları framebuffer arabelleğini temsil eder ve uygulama yazılımının grafik donanımına iyi tanımlanmış bir arabirim yoluyla erişmesine izin verir, böylece yazılımın alt düzey arabirim öğeleri hakkında hiç bir şey bilmesine gerek kalmaz.
